@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Take A Ride</title>
+
+    <meta charset="UTF-8">
+    
+	<!-- Bootstrap core CSS -->
+    <link href="framework/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="framework/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="theme.css" rel="stylesheet">    
+    
+    <script>
+        paceOptions = {
+          elements: true,
+          ajax: true,
+          document: true,
+          eventLag: true
+        };
+    </script>
+
+    <style>
+        #daily-volume-chart g.y {
+            display: none;
+        }
+    </style>
+	
+	<script src="https://cdn.firebase.com/js/client/1.0.15/firebase.js"></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+  <link rel="stylesheet" type="text/css" href="/resources/tutorial/css/example.css">
+
+
+    
+</head>
+
+<body>
+
+<!-- Fixed navbar -->
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Easy Lift</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">Home</a></li>
+            <li class="active"><a href="set.html">Set A Travel</a></li>    
+			<li><a href="get.html">Take A Ride</a></li>    
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+
+
+  
+
+<!-- CHAT MARKUP -->
+<div class="container">
+<div class="set">
+
+  <div class="row">
+  <div class="col-md-2">Sinpore <br> Phuket <br> Boon Keng <br> Dhoby Ghaut <br> Bishan <br></div>
+  <div class="col-md-2">Bangkok <br> Singapore <br> One North <br> Toa Payoh <br> Tanjong Pagar <br></div>
+  <div class="col-md-2">1/1/2014 18:00<br>1/2/2014 9:00<br> 2/6/2014 16:40 <br> 1/2/2014 12:00 <br> 5/2/2014 12:00 <br></div>
+  <div class="col-md-2">2<br> 2 <br> 4 <br> 2 <br> 3 <br></div>
+  <div class="col-md-2">5<br> 5 <br> 5 <br> 10 <br> 4 <br></div>
+</div>
+
+  <ul id='example-messages' class="example-chat-messages"></ul>
+
+  <div class="row">
+	<label>From:</label>
+    <input type='text' id='messageInput'  placeholder='Where you start'>
+
+
+    <label>To:</label>
+    <input type='text' id='nameInput' placeholder='Destnation'>
+	
+	<label>Time:</label>
+    <input type='text' id='nameInput' placeholder='Time you go'>
+	
+	<label>Seat Available:</label>
+    <input type='text' id='nameInput' placeholder='Available seat in your car'>
+	
+	<label>Price Per Seat:</label>
+    <input type='text' id='nameInput' placeholder='You ride price'>
+  </div>
+</div>
+</div>
+
+<!-- CHAT JAVACRIPT -->
+<script>
+  // CREATE A REFERENCE TO FIREBASE
+  var messagesRef = new Firebase();
+
+  // REGISTER DOM ELEMENTS
+  var messageField = $('#messageInput');
+  var nameField = $('#nameInput');
+  var messageList = $('#example-messages');
+
+  // LISTEN FOR KEYPRESS EVENT
+  messageField.keypress(function (e) {
+    if (e.keyCode == 13) {
+      //FIELD VALUES
+      var username = nameField.val();
+      var message = messageField.val();
+
+      //SAVE DATA TO FIREBASE AND EMPTY FIELD
+      messagesRef.push({name:username, text:message});
+      messageField.val('');
+    }
+  });
+
+  // Add a callback that is triggered for each chat message.
+  messagesRef.limit(10).on('child_added', function (snapshot) {
+    //GET DATA
+    var data = snapshot.val();
+    var username = data.name || "anonymous";
+    var message = data.text;
+
+    //CREATE ELEMENTS MESSAGE & SANITIZE TEXT
+    var messageElement = $("<li>");
+    var nameElement = $("<strong class='example-chat-username'></strong>")
+    nameElement.text(username);
+    messageElement.text(" "+message).prepend(nameElement);
+
+    //ADD MESSAGE
+    messageList.append(messageElement)
+
+    //SCROLL TO BOTTOM OF MESSAGE LIST
+    messageList[0].scrollTop = messageList[0].scrollHeight;
+  });
+</script>
+
+<script type="text/javascript" src="mydesk/js/jquery.js"></script>
+<script type="text/javascript" src="mydesk/js/bootstrap.min.js"></script>
+
+</body>
+</html>
